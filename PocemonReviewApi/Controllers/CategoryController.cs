@@ -100,7 +100,33 @@ namespace PocemonReviewApi.Controllers
             //    return Ok("Successfully created!!!");
             categorycreate.Id = categoryMap.Id;
             return CreatedAtRoute("GetCategory", new { categoryId = categoryMap.Id }, categorycreate);
-         
+        }
+
+        [HttpPut("{categoryId}")]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        public IActionResult UpdateCategory(int categoryId, [FromBody]CategoryDto updatedcategory)
+        {
+            if (updatedcategory == null)
+                return BadRequest(ModelState);
+
+            if(categoryId !=updatedcategory.Id)
+                return BadRequest(ModelState);
+
+            if (!_categoryRepository.CategoryExist(categoryId))
+                return NotFound();
+
+            if (!ModelState.IsValid)
+                return BadRequest();
+
+            var categoryMap = _mapper.Map<Category>(updatedcategory);
+            if (!_categoryRepository.UpdateCategory(categoryMap))
+            {
+                ModelState.AddModelError("", "Someting went wrong while updating category");
+                return StatusCode(500, ModelState);
+            }
+            return NoContent();
 
         }
 

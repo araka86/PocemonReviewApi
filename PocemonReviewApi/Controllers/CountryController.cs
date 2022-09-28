@@ -98,15 +98,36 @@ namespace PocemonReviewApi.Controllers
                 ModelState.AddModelError("", "Someting went wrong while saving");
                 return StatusCode(500, ModelState);
             }
-
-
                 return Ok("Successfully created!!!");
-        
-
-
         }
 
+        [HttpPut("{countryId}")]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        public IActionResult UpdateCountry(int countryId, [FromBody] CountryDto updatedcountry)
+        {
+            if (updatedcountry == null)
+                return BadRequest(ModelState);
 
+            if (countryId != updatedcountry.Id)
+                return BadRequest(ModelState);
+
+            if (!_countryRepository.CounntryExist(countryId))
+                return NotFound();
+
+            if (!ModelState.IsValid)
+                return BadRequest();
+
+            var countryyMap = _mapper.Map<Country>(updatedcountry);
+            if (!_countryRepository.UpdateCountry(countryyMap))
+            {
+                ModelState.AddModelError("", "Someting went wrong while updating country");
+                return StatusCode(500, ModelState);
+            }
+            return NoContent();
+
+        }
 
 
 

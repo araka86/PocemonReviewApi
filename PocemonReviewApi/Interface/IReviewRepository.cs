@@ -10,6 +10,7 @@ namespace PocemonReviewApi.Interface
         bool ReviewyExist(int id);
 
         bool CreateReview(Review review);
+        bool UpdateReview(Review review);
         bool Save();
 
     }

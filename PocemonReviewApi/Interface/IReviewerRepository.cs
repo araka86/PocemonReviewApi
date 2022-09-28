@@ -10,6 +10,7 @@ namespace PocemonReviewApi.Interface
         ICollection<Review> GetReviewerById(int id);
         bool ReviewerExist(int reviewerid);
         bool CreateReviewer(Reviewer reviewer);
+        bool UpdateReviewer(Reviewer reviewer);
         bool Save();
     }
 }

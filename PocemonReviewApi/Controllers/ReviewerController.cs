@@ -104,6 +104,34 @@ namespace PocemonReviewApi.Controllers
 
         }
 
+        [HttpPut("{reviewerId}")]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        public IActionResult UpdateReviewer(int reviewerId, [FromBody] ReviewerDto updatedReviewer)
+        {
+            if (updatedReviewer == null)
+                return BadRequest(ModelState);
+
+            if (reviewerId != updatedReviewer.Id)
+                return BadRequest(ModelState);
+
+            if (!_reviewerRepository.ReviewerExist(reviewerId))
+                return NotFound();
+
+            if (!ModelState.IsValid)
+                return BadRequest();
+
+            var reviewerMap = _mapper.Map<Reviewer>(updatedReviewer);
+
+            if (!_reviewerRepository.UpdateReviewer(reviewerMap))
+            {
+                ModelState.AddModelError("", "Someting went wrong while updating owner");
+                return StatusCode(500, ModelState);
+            }
+            return NoContent();
+        }
+
 
     }
 }
