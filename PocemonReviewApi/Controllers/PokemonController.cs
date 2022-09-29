@@ -17,18 +17,15 @@ namespace PocemonReviewApi.Controllers
         private readonly ICatagoryRepository _catagoryRepository;
         private readonly IReviewRepository _reviewRepository;
 
-        public IMapper _mapper { get; }
+        private readonly IMapper _mapper;
 
         public PokemonController(IPokemonRepository pokemonRepository, 
             IMapper mapper,
-            IOwnerRepository ownerRepository,
-            ICatagoryRepository catagoryRepository,
+       
             IReviewRepository reviewRepository)
         {
             _pokemonRepository = pokemonRepository;
             _mapper = mapper;
-            _ownerRepository = ownerRepository;
-            _catagoryRepository = catagoryRepository;
             _reviewRepository = reviewRepository;
         }
 
@@ -91,9 +88,7 @@ namespace PocemonReviewApi.Controllers
             if (pokemonCreate == null)
                 return BadRequest(ModelState);
 
-            var pokemons = _pokemonRepository.GetPokemons()
-                .Where(c => c.Name.Trim().ToUpper() == pokemonCreate.Name.TrimEnd().ToUpper())
-                .FirstOrDefault();
+            var pokemons = _pokemonRepository.GetPokemonTrimToUpper(pokemonCreate);
 
             if (pokemons != null)
             {

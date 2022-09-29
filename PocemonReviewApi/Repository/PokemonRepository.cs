@@ -1,4 +1,5 @@
 ﻿using PocemonReviewApi.Data;
+using PocemonReviewApi.Dto;
 using PocemonReviewApi.Interface;
 using PocemonReviewApi.Models;
 
@@ -84,6 +85,13 @@ namespace PocemonReviewApi.Repository
         {
             _context.Update(pokemon);
             return Save();
+        }
+
+
+        public Pokemon GetPokemonTrimToUpper(PokemonDto pokemonCreate)
+        {
+            return GetPokemons().Where(c => c.Name.Trim().ToUpper() == pokemonCreate.Name.TrimEnd().ToUpper())
+                .FirstOrDefault();
         }
     }
 }

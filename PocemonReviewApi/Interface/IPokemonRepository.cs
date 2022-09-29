@@ -1,4 +1,5 @@
-﻿using PocemonReviewApi.Models;
+﻿using PocemonReviewApi.Dto;
+using PocemonReviewApi.Models;
 
 namespace PocemonReviewApi.Interface
 {
@@ -13,6 +14,7 @@ namespace PocemonReviewApi.Interface
         bool UpdatePokemon(int ownerId,int categoryId,Pokemon pokemon);
         bool DeletePokemon(Pokemon pokeid);
         bool Save();
+        Pokemon GetPokemonTrimToUpper(PokemonDto pokemonCreate);
 
     }
 }
