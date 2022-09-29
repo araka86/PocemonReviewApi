@@ -130,6 +130,30 @@ namespace PocemonReviewApi.Controllers
 
         }
 
+        [HttpDelete("{categoryId}")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public IActionResult DeleteCategory(int categoryId) 
+        {
+            if (!_categoryRepository.CategoryExist(categoryId))
+                return NotFound();
+
+            var categoryMap = _categoryRepository.GetCategory(categoryId);
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            if (!_categoryRepository.DeleteCategory(categoryMap))
+            {
+                ModelState.AddModelError("", "Someting went wrong while deleting category");
+                return StatusCode(500, ModelState);
+            }
+            return NoContent();
+
+        }
+
+
 
 
     }

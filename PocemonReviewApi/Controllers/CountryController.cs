@@ -63,12 +63,7 @@ namespace PocemonReviewApi.Controllers
                 return BadRequest();
 
             return Ok(country);
-
         }
-
-
-
-
 
         [HttpPost]
         [ProducesResponseType(204)]
@@ -130,7 +125,27 @@ namespace PocemonReviewApi.Controllers
         }
 
 
+        [HttpDelete("{countryId}")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public IActionResult DeleteCountry(int countryId)
+        {
+            if (!_countryRepository.CounntryExist(countryId))
+                return NotFound();
 
+            var countryToDelete = _countryRepository.GetCountry(countryId);
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            if (!_countryRepository.DeleteCountry(countryToDelete))
+            {
+                ModelState.AddModelError("", "Someting went wrong while deleting country");
+                return StatusCode(500, ModelState);
+            }
+            return NoContent();
+        }
 
 
 

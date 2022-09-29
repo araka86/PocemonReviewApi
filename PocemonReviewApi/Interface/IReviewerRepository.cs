@@ -7,10 +7,11 @@ namespace PocemonReviewApi.Interface
         ICollection<Reviewer> GetReviewers();
         Reviewer GetReviewer(int id);
 
-        ICollection<Review> GetReviewerById(int id);
+        ICollection<Review> GetReviewsByReviewer(int reviewerId);
         bool ReviewerExist(int reviewerid);
         bool CreateReviewer(Reviewer reviewer);
         bool UpdateReviewer(Reviewer reviewer);
+        bool DeleteReviewer(Reviewer reviewerid);
         bool Save();
     }
 }

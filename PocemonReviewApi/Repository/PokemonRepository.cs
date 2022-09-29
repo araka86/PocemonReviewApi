@@ -38,6 +38,12 @@ namespace PocemonReviewApi.Repository
 
         }
 
+        public bool DeletePokemon(Pokemon pokeid)
+        {
+            _context.Remove(pokeid);
+            return Save();
+        }
+
         public Pokemon GetPokemon(int id)
         {
             return _context.Pokemons.Where(x => x.Id == id).FirstOrDefault();

@@ -63,7 +63,10 @@ namespace PocemonReviewApi.Controllers
             if (!_reviewerRepository.ReviewerExist(reviewerId))
                 return NotFound();
 
-            var reviws = _mapper.Map<List<ReviewDto>>(_reviewerRepository.GetReviewerById(reviewerId));
+            var reviws = _mapper.Map<List<ReviewDto>>(_reviewerRepository.GetReviewsByReviewer(reviewerId));
+
+            if(reviws.Count()==0)
+                return NotFound();
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -126,11 +129,37 @@ namespace PocemonReviewApi.Controllers
 
             if (!_reviewerRepository.UpdateReviewer(reviewerMap))
             {
-                ModelState.AddModelError("", "Someting went wrong while updating owner");
+                ModelState.AddModelError("", "Someting went wrong while updating reviewer");
                 return StatusCode(500, ModelState);
             }
             return NoContent();
         }
+
+
+
+        [HttpDelete("{reviewerId}")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public IActionResult DeleteReviewer(int reviewerId)
+        {
+            if (!_reviewerRepository.ReviewerExist(reviewerId))
+                return NotFound();
+
+            var reviewerToDelete = _reviewerRepository.GetReviewer(reviewerId);
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            if (!_reviewerRepository.DeleteReviewer(reviewerToDelete))
+            {
+                ModelState.AddModelError("", "Someting went wrong while deleting reviewer");
+                return StatusCode(500, ModelState);
+            }
+            return NoContent();
+        }
+
+
 
 
     }

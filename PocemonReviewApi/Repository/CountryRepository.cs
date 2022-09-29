@@ -27,6 +27,12 @@ namespace PocemonReviewApi.Repository
             return Save();
         }
 
+        public bool DeleteCountry(Country country)
+        {
+            _context.Remove(country);
+            return Save();
+        }
+
         public ICollection<Country> GetCountries()
         {
             return _context.Countrys.ToList();
@@ -50,7 +56,6 @@ namespace PocemonReviewApi.Repository
         public bool Save()
         {
             var saved = _context.SaveChanges();
-
             return saved > 0 ? true : false;
         }
 

@@ -50,7 +50,7 @@ namespace PocemonReviewApi.Controllers
         [ProducesResponseType(400)]
         public IActionResult GetReview(int reviewId)
         {
-            if (!_reviewRepository.ReviewyExist(reviewId))
+            if (!_reviewRepository.ReviewExist(reviewId))
                 return NotFound();
 
             var review = _mapper.Map<ReviewDto>(_reviewRepository.GetReview(reviewId));
@@ -73,6 +73,10 @@ namespace PocemonReviewApi.Controllers
 
             if (!ModelState.IsValid)
                 return BadRequest();
+
+          
+            if (reviews.Count() == 0)
+                return NotFound();
 
             return Ok(reviews);
         }
@@ -144,6 +148,29 @@ namespace PocemonReviewApi.Controllers
             return NoContent();
         }
 
+
+
+        [HttpDelete("{reviewId}")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public IActionResult DeleteReview(int reviewId)
+        {
+            if (!_reviewRepository.ReviewExist(reviewId))
+                return NotFound();
+
+            var reviewToDelete = _reviewRepository.GetReview(reviewId);
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            if (!_reviewRepository.DeleteReview(reviewToDelete))
+            {
+                ModelState.AddModelError("", "Someting went wrong while deleting review");
+                return StatusCode(500, ModelState);
+            }
+            return NoContent();
+        }
 
 
 

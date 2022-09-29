@@ -133,6 +133,28 @@ namespace PocemonReviewApi.Controllers
             return NoContent();
         }
 
+        [HttpDelete("{ownerId}")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public IActionResult DeleteOwner(int ownerId)
+        {
+            if (!_ownerRepository.OwnerExist(ownerId))
+                return NotFound();
+
+            var ownerToDelete = _ownerRepository.GetOwner(ownerId);
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            if (!_ownerRepository.DeleteOwner(ownerToDelete))
+            {
+                ModelState.AddModelError("", "Someting went wrong while deleting owner");
+                return StatusCode(500, ModelState);
+            }
+            return NoContent();
+        }
+
 
 
     }

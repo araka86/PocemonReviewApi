@@ -11,6 +11,7 @@ namespace PocemonReviewApi.Interface
         bool PokemonExist(int pokeid);
         bool CreatePokemon(int ownerId,int categoryId,Pokemon pokemon);
         bool UpdatePokemon(int ownerId,int categoryId,Pokemon pokemon);
+        bool DeletePokemon(Pokemon pokeid);
         bool Save();
 
     }

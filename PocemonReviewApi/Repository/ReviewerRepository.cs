@@ -24,12 +24,18 @@ namespace PocemonReviewApi.Repository
             return Save();
         }
 
+        public bool DeleteReviewer(Reviewer reviewerid)
+        {
+         _context.Remove(reviewerid);
+            return Save();
+        }
+
         public Reviewer GetReviewer(int reviewerid)
         {
             return _context.Reviewers.Where(x => x.Id == reviewerid).Include(y => y.Reviews).FirstOrDefault();
         }
 
-        public ICollection<Review> GetReviewerById(int id)
+        public ICollection<Review> GetReviewsByReviewer(int id)
         {
            return _context.Reviews.Where(r=>r.Reviewer.Id == id).ToList();
         }
@@ -41,7 +47,7 @@ namespace PocemonReviewApi.Repository
 
         public bool ReviewerExist(int reviewerid)
         {
-            return _context.Reviews.Any(r => r.Id == reviewerid);
+            return _context.Reviewers.Any(r => r.Id == reviewerid);
         }
 
         public bool Save()

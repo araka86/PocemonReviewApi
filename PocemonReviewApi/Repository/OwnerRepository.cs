@@ -24,6 +24,12 @@ namespace PocemonReviewApi.Repository
             return Save();
         }
 
+        public bool DeleteOwner(Owner ownerId)
+        {
+            _context.Remove(ownerId);
+            return Save();
+        }
+
         public Owner GetOwner(int ownerId)
         {
             return _context.Owners.Where(x => x.Id == ownerId).FirstOrDefault();

@@ -23,6 +23,19 @@ namespace PocemonReviewApi.Repository
             return Save();
         }
 
+        public bool DeleteReview(Review review)
+        {
+            _context.Remove(review);
+            return Save();
+
+        }
+
+        public bool DeleteReviews(List<Review> reviews)
+        {
+           _context.RemoveRange(reviews);
+            return Save();
+        }
+
         public Review GetReview(int reviwid)
         {
             return _context.Reviews.Where(x => x.Id == reviwid).FirstOrDefault();
@@ -37,11 +50,11 @@ namespace PocemonReviewApi.Repository
 
         public ICollection<Review> GetReviewsOfPokemon(int reviwid)
         {
-            var ttt = _context.Reviews.Where(x => x.Pokemon.Id == reviwid).ToList();
+           
             return _context.Reviews.Where(x => x.Pokemon.Id == reviwid).ToList();
         }
 
-        public bool ReviewyExist(int reviwid)
+        public bool ReviewExist(int reviwid)
         {
             return _context.Reviews.Any(x => x.Id == reviwid);
         }
