@@ -19,10 +19,7 @@ namespace PocemonReviewApi.Controllers
 
         private readonly IMapper _mapper;
 
-        public PokemonController(IPokemonRepository pokemonRepository, 
-            IMapper mapper,
-       
-            IReviewRepository reviewRepository)
+        public PokemonController(IPokemonRepository pokemonRepository, IMapper mapper, IReviewRepository reviewRepository)
         {
             _pokemonRepository = pokemonRepository;
             _mapper = mapper;
@@ -157,7 +154,7 @@ namespace PocemonReviewApi.Controllers
 
             if (!_reviewRepository.DeleteReviews(reviewsToDelete.ToList()))
             {
-                ModelState.AddModelError("", "Someting went wrong while deleting reviews");
+                ModelState.AddModelError("", "Someting went wrong while deleting pokemon");
             }
 
             if (!_pokemonRepository.DeletePokemon(pokemonToDelete))

@@ -1,11 +1,13 @@
 ﻿using AutoMapper;
 using FakeItEasy;
 using FluentAssertions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using PocemonReviewApi.Controllers;
 using PocemonReviewApi.Dto;
 using PocemonReviewApi.Interface;
 using PocemonReviewApi.Models;
+using PocemonReviewApi.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -57,9 +59,10 @@ namespace PocemonReviewApi.Tests.Controller
             var pokemonCreate = A.Fake<PokemonDto>();
             var pokemons = A.Fake<ICollection<PokemonDto>>();
             var pokmonList = A.Fake<IList<PokemonDto>>();
-            A.CallTo(() => _pokemonRepository.GetPokemonTrimToUpper(pokemonCreate)).Returns(pokemon);
-            A.CallTo(() => _mapper.Map<Pokemon>(pokemonCreate)).Returns(pokemon);
-            A.CallTo(() => _pokemonRepository.CreatePokemon(ownerId, catId, pokemonMap)).Returns(true);
+
+            A.CallTo(() => _pokemonRepository.GetPokemonTrimToUpper(pokemonCreate)).Returns(pokemon);               //check for exist
+            A.CallTo(() => _mapper.Map<Pokemon>(pokemonCreate)).Returns(pokemon);                                   //reverse model <----to------ map
+            A.CallTo(() => _pokemonRepository.CreatePokemon(ownerId, catId, pokemonMap)).Returns(true);             //create
             var controller = new PokemonController(_pokemonRepository,_mapper,_reviewRepository);
 
             //Act
@@ -68,6 +71,59 @@ namespace PocemonReviewApi.Tests.Controller
             //Assert
             result.Should().NotBeNull();
         }
+
+
+        [Fact]
+        public async void PokemonController_Delete_ReturnOK()
+        {
+            //Arange
+            var pokemonId = 1;
+
+            var pokemons = A.Fake<ICollection<Review>>();
+            var pokemon = A.Fake<Pokemon>();
+
+            A.CallTo(() => _pokemonRepository.PokemonExist(pokemonId)).Returns(true);
+            A.CallTo(() => _reviewRepository.GetReviewsOfPokemon(pokemonId)).Returns(pokemons);
+            A.CallTo(() => _pokemonRepository.GetPokemon(pokemonId)).Returns(pokemon);
+
+            A.CallTo(() => _pokemonRepository.DeletePokemon(pokemon)).Returns(true);
+            //Act
+            var controller = new PokemonController(_pokemonRepository, _mapper, _reviewRepository);
+            var result = controller.DeletePockemon(pokemonId);
+            //  var result2 = pokemonRepository.DeletePokemon(pokemon);
+
+            //Assert
+
+            result.Should().NotBeNull();
+        }
+
+        [Fact]
+        public async void PokemonController_UpdatePokemon_ReturnOK()
+        {
+            //Arange
+            int ownerId =1;
+            int catId = 1;
+            int pokemonId =1;
+
+            var pokemon = A.Fake<Pokemon>();
+            var pokemonUpdate = A.Fake<PokemonDto>();
+            pokemonUpdate.Id = ownerId;
+
+
+            A.CallTo(() => _pokemonRepository.PokemonExist(pokemonId)).Returns(true);
+            A.CallTo(() => _mapper.Map<Pokemon>(pokemonUpdate)).Returns(pokemon);
+            A.CallTo(() => _pokemonRepository.UpdatePokemon(ownerId, catId, pokemon)).Returns(true);        //create
+            var controller = new PokemonController(_pokemonRepository, _mapper, _reviewRepository);
+            //Act
+
+
+            var result = controller.UpdatePokemon(ownerId,catId,pokemonId, pokemonUpdate);
+            // Assert
+            result.Should().NotBeNull();
+        }
+
+
+
 
 
 
